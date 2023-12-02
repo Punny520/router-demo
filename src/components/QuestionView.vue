@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>题目类型：{{ question.questionTypeId }}</p>
+        <p>题目类型：{{ questionType.typeName }}</p>
         <div>
             <div class="qo">
                 {{ question.questionContent }}
@@ -14,14 +14,20 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { useRoute } from 'vue-router';
 export default {
     data(){
         return{
+            questionType:{
+                questionTypeId: '',
+                typeName: '',
+                questionCount: ''
+            },
             questionList: [],
             question: {
                 questionId: '',
-                questionTypeId: '测试',
+                questionTypeId: '',
                 questionContent: '测试',
                 questionOptionsList: []
             },
@@ -36,7 +42,12 @@ export default {
     mounted(){
         const route = useRoute();
         console.log(route.params.id);
-
+        axios.get("/getTypeById?id="+route.params.id).then(
+            (response) =>{
+                this.questionType = response.data.data;
+                console.log(this.questionType);
+            }
+        )
     }
 }
 </script>

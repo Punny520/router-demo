@@ -44,11 +44,11 @@ export default {
     };
   },
     mounted(){
-        // axios.get('/getQuestionType').then(
-        //     (response)=>{
-        //         this.questionTypeList = response.data.data;
-        //     }
-        // )
+        axios.get('/getQuestionType').then(
+            (response)=>{
+                this.questionTypeList = response.data.data;
+            }
+        )
     },
     methods:{
         toNext(questionTypeId){

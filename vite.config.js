@@ -9,12 +9,19 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  build:{
-    target:"es2015"
-  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080', //目标url
+        changeOrigin: true, //支持跨域
+        rewrite: (path) => path.replace(/^\/api/, ""), 
+          //重写路径,替换/api
+      }
     }
   }
 })
