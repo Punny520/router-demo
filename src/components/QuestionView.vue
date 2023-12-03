@@ -1,13 +1,33 @@
 <template>
-    <div>
-        <p>题目类型：{{ questionType.typeName }}</p>
+    <div v-if="questionIndex < questionList.length">
+        <p>题目类型：{{ questionType.name }}</p>
         <div>
-            <div class="qo">
-                {{ question.questionContent }}
+            <div>
+                <div class="qo">
+                    {{ questionList[questionIndex].content}}
+                </div>
+                <div class="qo" v-for="(qoption,index) in questionList[questionIndex].qoptionList" 
+                :key='`${questionList[questionIndex].id}_${qoption.id}`'>
+                    <input type="radio" :value="index" :name="`que_${questionList[questionIndex].id}_opt_${questionList[questionIndex].id}`" v-model="chosen">
+                    {{ abcIndex[index] }} : {{ qoption.content }}
+                </div>
             </div>
-
-            <div class="qo">
-
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <el-button type="primary" :disabled="questionIndex === 0 ? true : false" @click="left_but"><el-icon><ArrowLeftBold /></el-icon>上一题</el-button>
+            <el-button v-if="questionIndex < questionList.length-1" type="primary" @click="right_but">下一题<el-icon><ArrowRightBold /></el-icon></el-button>
+            <el-button v-else type="primary" @click="finish_but">查看结果<el-icon><CircleCheckFilled /></el-icon></el-button>
+        </div>
+    </div>
+    <div v-else>
+        <div>
+            <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`">
+                {{ que_index+1 }}  : {{ question.content}}
+                <div class="qo" v-for="(qoption,opt_index) in question.qoptionList"
+                    :key='`t_${question.id}_${qoption.id}`'>
+                    {{ abcIndex[opt_index]}} : {{ qoption.content }}
+                </div>
+                正确答案：{{ getAnswer(question.qoptionList) }},你选择的：{{ abcIndex[que_answer[que_index]] }}
             </div>
         </div>
     </div>
@@ -15,39 +35,99 @@
 
 <script>
 import axios from 'axios';
+import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 export default {
     data(){
         return{
+            chosen: null,
+            questionIndex: 0,
             questionType:{
-                questionTypeId: '',
-                typeName: '',
+                id: '',
+                name: '',
                 questionCount: ''
             },
             questionList: [],
             question: {
-                questionId: '',
-                questionTypeId: '',
-                questionContent: '测试',
-                questionOptionsList: []
+                id: '',
+                typeId: '',
+                content: '',
+                qoptionList: []
             },
-            questionOptions: {
-                optionsId: '',
-                optionContent: '',
+            qoption: {
+                id: '',
+                content: '',
                 questionId: '',
-                answer: false
+                answer: 0
+            },
+            abcIndex:['A','B','C','D','E','F','G','H','I'],//序号映射选项
+            que_answer:[],//用户答案队列
+        }
+    },
+    methods:{
+        left_but(){
+            this.que_answer[this.questionIndex] = this.chosen//保存答题状态
+            this.questionIndex--;//题号减一回到上一题
+            this.chosen = this.que_answer[this.questionIndex];//将记录的答案选择状态赋予给当前的题目
+        },
+        right_but(){
+            if(this.chosen == null){
+                ElMessage({
+                    message:"请选择一个答案",
+                    type: 'error'
+                })
+                return ;
             }
+            console.log("选择了："+this.abcIndex[this.chosen]);
+            this.que_answer[this.questionIndex] = this.chosen;//更改答案
+            this.questionIndex++;//题号加一下一题
+            this.chosen = this.que_answer[this.questionIndex];//将记录的答案选择状态赋予给当前的题目
+        },
+        finish_but(){
+            this.que_answer[this.questionIndex] = this.chosen;//更改答案
+            this.questionIndex++;
+            ElMessage({
+                message:"结算成功",
+                type: 'success'
+            })
+        },
+        handleBeforeUnload(event) {
+            const message = "刷新后不会保存答题结果!";
+            event.returnValue = message; // 标准浏览器
+            return message; // 针对老版本浏览器
+        },
+        getAnswer(opt_list){
+            let ans = '';
+            opt_list.forEach((opt,index) => {
+                if(opt.answer == 1){
+                    console.log(this.abcIndex[index]);
+                    ans = this.abcIndex[index];
+                    return;
+                }
+            });
+            return ans;
         }
     },
     mounted(){
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
         const route = useRoute();
-        console.log(route.params.id);
-        axios.get("/getTypeById?id="+route.params.id).then(
+        //根据id获取题目类型
+        axios.get("/questionType/getById?id="+route.params.id).then(
             (response) =>{
                 this.questionType = response.data.data;
                 console.log(this.questionType);
             }
         )
+        //根据题目类型id获取题目列表
+        axios.get('/question/getByTypeId?id='+route.params.id).then(
+            (response) =>{
+                this.questionList = response.data.data;
+                console.log(this.questionList);
+            }
+        )
+    },
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
     }
 }
 </script>

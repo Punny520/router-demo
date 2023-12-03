@@ -3,10 +3,10 @@
         <h2>选择题目类型：</h2>
         <el-button
             class="but" type="primary" plain
-            v-for="questionType in questionTypeList" :key="questionType.questionTypeId"
-            @click="toNext(questionType.questionTypeId)"
+            v-for="questionType in questionTypeList" :key="questionType.id"
+            @click="toNext(questionType.id)"
         >
-            {{ questionType.typeName }}
+            {{ questionType.name }}
         </el-button>
     </div>
 </template>
@@ -17,21 +17,10 @@ import { useRouter } from 'vue-router';
 export default {
     data(){
         return{
-            questionTypeList: [
-                {
-                    questionTypeId: 1,
-                    typeName: '1测试',
-                    questionCount: '',
-                },
-                {
-                    questionTypeId: 2,
-                    typeName: '2测试',
-                    questionCount: '',
-                },
-        ],
+            questionTypeList: [],
             questionType:{
-                questionTypeId: null,
-                typeName: null,
+                id: null,
+                name: null,
                 questionCount: null
             }
         }
@@ -44,16 +33,17 @@ export default {
     };
   },
     mounted(){
-        axios.get('/getQuestionType').then(
+        //获取全部题目类型
+        axios.get('/questionType/getAll').then(
             (response)=>{
                 this.questionTypeList = response.data.data;
             }
         )
     },
     methods:{
+        //跳转至答题页面并且传递题目类型id
         toNext(questionTypeId){
             this.router.push("/Question/"+questionTypeId);
-            //跳转逻辑
         }
     },
 }
