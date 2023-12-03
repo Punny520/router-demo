@@ -14,7 +14,7 @@
                     />
                 </el-select>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="3">
                 <el-button size="large" @click="search"><el-icon><Search /></el-icon>搜索</el-button>
             </el-col>
             <el-col :span="6">

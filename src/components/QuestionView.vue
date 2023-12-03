@@ -8,15 +8,31 @@
                 </div>
                 <div class="qo" v-for="(qoption,index) in questionList[questionIndex].qoptionList" 
                 :key='`${questionList[questionIndex].id}_${qoption.id}`'>
-                    <input type="radio" :value="index" :name="`que_${questionList[questionIndex].id}_opt_${questionList[questionIndex].id}`" v-model="chosen">
+                    <input type="radio" 
+                    :value="index" 
+                    :name="`que_${questionList[questionIndex].id}_opt_${questionList[questionIndex].id}`" 
+                    v-model="chosen">
                     {{ abcIndex[index] }} : {{ qoption.content }}
                 </div>
             </div>
         </div>
         <div style="display: flex; justify-content: space-between;">
-            <el-button type="primary" :disabled="questionIndex === 0 ? true : false" @click="left_but"><el-icon><ArrowLeftBold /></el-icon>上一题</el-button>
-            <el-button v-if="questionIndex < questionList.length-1" type="primary" @click="right_but">下一题<el-icon><ArrowRightBold /></el-icon></el-button>
-            <el-button v-else type="primary" @click="finish_but">查看结果<el-icon><CircleCheckFilled /></el-icon></el-button>
+            <el-button type="primary" 
+            :disabled="questionIndex === 0 ? true : false" @click="left_but">
+                <el-icon><ArrowLeftBold /></el-icon>上一题
+            </el-button>
+
+            <el-button v-if="questionIndex < questionList.length-1" 
+            type="primary" 
+            @click="right_but">
+                下一题<el-icon><ArrowRightBold /></el-icon>
+            </el-button>
+            
+            <el-button v-else 
+            type="primary" 
+            @click="finish_but">
+                查看结果<el-icon><CircleCheckFilled /></el-icon>
+            </el-button>
         </div>
     </div>
     <div v-else style="overflow: auto;">
