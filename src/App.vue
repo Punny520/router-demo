@@ -19,7 +19,9 @@
                 <router-link to="/questiontype" class="router-link">
                     <el-menu-item index="2-1"><el-icon><CircleCheck /></el-icon>答题</el-menu-item>
                 </router-link>
-                <el-menu-item index="2-2"><el-icon><Document /></el-icon>学习资料</el-menu-item>
+                <router-link to="/Document" class="router-link">
+                    <el-menu-item index="2-2"><el-icon><Document /></el-icon>学习资料</el-menu-item>
+                </router-link>
             </el-sub-menu>
 
             <el-menu-item index="3">
@@ -35,7 +37,7 @@
             </el-menu-item>
         </el-menu>
 
-        <div class="container">
+        <div class="container" style="overflow: auto;">
             <router-view></router-view>
         </div>
 
@@ -46,10 +48,12 @@
 <script>
 import QuestionView from './components/QuestionView.vue'
 import QuestionTypeView from './components/QuestionTypeView.vue'
+import DocumentView from './components/DocumentView.vue'
 export default {
     components:{
         QuestionView,
-        QuestionTypeView
+        QuestionTypeView,
+        DocumentView
     },
     methods:{
     }
@@ -60,8 +64,7 @@ export default {
 <style scoped>
     .container{
         width: 1000px;
-        min-height: 500px;
-        height: auto;
+        height: 700px;
         margin: 20px auto;
         padding: 20px;
         box-shadow: var(--el-box-shadow-light);

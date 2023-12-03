@@ -1,5 +1,5 @@
 <template>
-    <div v-if="questionIndex < questionList.length">
+    <div v-if="questionIndex < questionList.length" style="overflow: auto;">
         <p>题目类型：{{ questionType.name }}</p>
         <div>
             <div>
@@ -19,16 +19,14 @@
             <el-button v-else type="primary" @click="finish_but">查看结果<el-icon><CircleCheckFilled /></el-icon></el-button>
         </div>
     </div>
-    <div v-else>
-        <div>
-            <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`">
-                {{ que_index+1 }}  : {{ question.content}}
-                <div class="qo" v-for="(qoption,opt_index) in question.qoptionList"
-                    :key='`t_${question.id}_${qoption.id}`'>
-                    {{ abcIndex[opt_index]}} : {{ qoption.content }}
-                </div>
-                正确答案：{{ getAnswer(question.qoptionList) }},你选择的：{{ abcIndex[que_answer[que_index]] }}
+    <div v-else style="overflow: auto;">
+        <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`">
+            {{ que_index+1 }}  : {{ question.content}}
+            <div class="qo" v-for="(qoption,opt_index) in question.qoptionList"
+                :key='`t_${question.id}_${qoption.id}`'>
+                {{ abcIndex[opt_index]}} : {{ qoption.content }}
             </div>
+            正确答案：{{ getAnswer(question.qoptionList) }},你选择的：{{ abcIndex[que_answer[que_index]] }}
         </div>
     </div>
 </template>
@@ -84,6 +82,13 @@ export default {
             this.chosen = this.que_answer[this.questionIndex];//将记录的答案选择状态赋予给当前的题目
         },
         finish_but(){
+            if(this.chosen == null){
+                ElMessage({
+                    message:"请选择一个答案",
+                    type: 'error'
+                })
+                return ;
+            }
             this.que_answer[this.questionIndex] = this.chosen;//更改答案
             this.questionIndex++;
             ElMessage({

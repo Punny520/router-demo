@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box" style="overflow: auto;">
         <h2>选择题目类型：</h2>
         <el-button
             class="but" type="primary" plain
