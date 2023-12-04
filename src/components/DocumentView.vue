@@ -22,7 +22,14 @@
             </el-col>
        </el-row>
        <el-table :data="documentList" stripe style="width: 100%">
-            <el-table-column prop="title" label="标题" width="180" />
+            <el-table-column label="标题" width="180">
+                <template v-slot="{ row }">
+                    <!-- 使用 router-link 创建链接 -->
+                    <router-link :to="`/DocumentDetail/${row.id}`" class="custom-link">
+                    {{ row.title }}
+                    </router-link>
+                </template>
+        </el-table-column>
             <el-table-column prop="typeName" label="类型" width="180" />
             <el-table-column prop="introduction" label="简介" />
         </el-table>
@@ -139,7 +146,12 @@ export default {
                 //补全typeName
                 this.documentList.forEach(
                     (item) =>{
+                        console.log("introduction_lenth:"+item.introduction.length)
                         item.typeName = this.getTypeName.get(item.typeId);
+                        //长度太大显示省略号
+                        if(item.introduction.length >= 40){
+                            item.introduction = item.introduction.substring(0,40) + '...';
+                        }
                     }
                 )
                 console.log(this.documentList);
@@ -150,5 +162,13 @@ export default {
 </script>
 
 <style>
+    .custom-link {
+        color: inherit; /* 使用父元素的文本颜色 */
+        text-decoration: none; /* 去除下划线 */
+        cursor: pointer; /* 显示光标为指针 */
+    }
 
+    .custom-link:hover {
+        text-decoration: underline; /* 在悬停时显示下划线 */
+    }
 </style>

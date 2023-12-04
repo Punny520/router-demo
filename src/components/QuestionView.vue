@@ -38,7 +38,7 @@
     <div v-else style="overflow: auto;">
         <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`">
             {{ que_index+1 }}  : {{ question.content}}
-            <div class="qo" v-for="(qoption,opt_index) in question.qoptionList"
+            <div class="opt" v-for="(qoption,opt_index) in question.qoptionList"
                 :key='`t_${question.id}_${qoption.id}`'>
                 {{ abcIndex[opt_index]}} : {{ qoption.content }}
             </div>
@@ -156,9 +156,22 @@ export default {
 <style scoped>
     .qo{
         width: 750px;
-        min-height: 100px;
+        min-height: 55px;
         height: auto;
         margin: 20px auto;
         overflow-wrap: break-word;
+        border: 2px solid var(--el-border-color);
+        border-radius: 4px;
+        padding: 20px;
+    }
+    .opt{
+        width: 650px;
+        min-height: 55px;
+        height: auto;
+        margin: 20px auto;
+        overflow-wrap: break-word;
+        border: 2px solid var(--el-border-color);
+        border-radius: 4px;
+        padding: 20px;
     }
 </style>
