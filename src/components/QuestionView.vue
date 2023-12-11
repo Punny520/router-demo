@@ -36,13 +36,21 @@
         </div>
     </div>
     <div v-else style="overflow: auto;">
-        <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`">
+        <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`" style="position: relative;">
             {{ que_index+1 }}  : {{ question.content}}
             <div class="opt" v-for="(qoption,opt_index) in question.qoptionList"
                 :key='`t_${question.id}_${qoption.id}`'>
                 {{ abcIndex[opt_index]}} : {{ qoption.content }}
             </div>
             正确答案：{{ getAnswer(question.qoptionList) }},你选择的：{{ abcIndex[que_answer[que_index]] }}
+
+            <!-- 按钮 -->
+            <el-button type="primary" round style="position: absolute; bottom: 10px; right: 10px;" @click="addFavor">
+                添加至收藏夹
+                <el-icon>
+                    <CirclePlus />
+                </el-icon>
+            </el-button>
         </div>
     </div>
 </template>
@@ -79,6 +87,13 @@ export default {
         }
     },
     methods:{
+        addFavor(){
+            //TODO: 添加至收藏夹
+            ElMessage({
+                message:"添加成功",
+                type: 'success'
+            })
+        },
         left_but(){
             this.que_answer[this.questionIndex] = this.chosen//保存答题状态
             this.questionIndex--;//题号减一回到上一题
