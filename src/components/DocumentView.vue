@@ -1,6 +1,6 @@
 <template>
     <div>
-       <h2>学习资料</h2>
+       <h2 style="color: #555;">学习资料</h2>
        <el-row :gutter="20">
             <el-col :span="6">
                 <el-input placeholder="输入标题以搜索" size="large" v-model="search_title"/>
@@ -33,6 +33,10 @@
             <el-table-column prop="typeName" label="类型" width="180" />
             <el-table-column prop="introduction" label="简介" />
         </el-table>
+        <div style="margin: 10px">
+            <el-pagination background layout="prev, pager, next" :total="10" />
+        </div>
+
     </div>
 </template>
 

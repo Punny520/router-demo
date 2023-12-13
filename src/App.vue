@@ -37,9 +37,9 @@
             </el-menu-item>
         </el-menu>
 
-        <div class="container" style="overflow: auto;">
+        <el-scrollbar class="container" style="overflow: auto;">
             <router-view></router-view>
-        </div>
+        </el-scrollbar>
 
     </div>
 

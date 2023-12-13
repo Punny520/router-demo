@@ -8,11 +8,10 @@
                 </div>
                 <div class="qo" v-for="(qoption,index) in questionList[questionIndex].qoptionList" 
                 :key='`${questionList[questionIndex].id}_${qoption.id}`'>
-                    <input type="radio" 
-                    :value="index" 
-                    :name="`que_${questionList[questionIndex].id}_opt_${questionList[questionIndex].id}`" 
-                    v-model="chosen">
-                    {{ abcIndex[index] }} : {{ qoption.content }}
+                    <el-radio :label="index" size="large" v-model="chosen" border>
+                        {{ abcIndex[index] }}
+                    </el-radio>
+                     {{ qoption.content }}
                 </div>
             </div>
         </div>
@@ -36,13 +35,24 @@
         </div>
     </div>
     <div v-else style="overflow: auto;">
+        <div class="qo">
+            本次答题答对: 
+            {{ right_num }} /
+            {{ questionList.length }}题
+            <br>
+            得分: {{ right_num }} 分
+        </div>
+
         <div class="qo" v-for="(question,que_index) in questionList" :key="`t_${question.id}`" style="position: relative;">
             {{ que_index+1 }}  : {{ question.content}}
             <div class="opt" v-for="(qoption,opt_index) in question.qoptionList"
                 :key='`t_${question.id}_${qoption.id}`'>
                 {{ abcIndex[opt_index]}} : {{ qoption.content }}
             </div>
-            正确答案：{{ getAnswer(question.qoptionList) }},你选择的：{{ abcIndex[que_answer[que_index]] }}
+            正确答案: <span style="color: #67C23A;">{{ getAnswer(question.qoptionList) }}</span>
+            <br>
+            你选择的: 
+            <span :style="getColor(getAnswer(question.qoptionList),abcIndex[que_answer[que_index]])">{{ abcIndex[que_answer[que_index]] }}</span>
 
             <!-- 按钮 -->
             <el-button type="primary" round style="position: absolute; bottom: 10px; right: 10px;" @click="addFavor">
@@ -84,6 +94,7 @@ export default {
             },
             abcIndex:['A','B','C','D','E','F','G','H','I'],//序号映射选项
             que_answer:[],//用户答案队列
+            right_num: 0
         }
     },
     methods:{
@@ -122,6 +133,13 @@ export default {
             }
             this.que_answer[this.questionIndex] = this.chosen;//更改答案
             this.questionIndex++;
+
+            this.questionList.forEach((item,index)=>{
+                if(this.getAnswer(item.qoptionList)===this.abcIndex[this.que_answer[index]]){
+                    this.right_num++;
+                }
+            })
+
             ElMessage({
                 message:"结算成功",
                 type: 'success'
@@ -142,6 +160,11 @@ export default {
                 }
             });
             return ans;
+        },
+        getColor(ans,user_ans){
+            if(ans === user_ans){
+                return {color: '#67C23A'};
+            }else return { color: '#F56C6C' };
         }
     },
     mounted(){
@@ -188,5 +211,6 @@ export default {
         border: 2px solid var(--el-border-color);
         border-radius: 4px;
         padding: 20px;
+        white-space: normal;
     }
 </style>

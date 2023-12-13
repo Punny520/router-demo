@@ -6,12 +6,19 @@
       </div>
       <div class="content-box">
         <p>{{ document.content }}</p>
+          <el-button type="primary" round style="position: absolute; bottom: 10px; right: 10px;" @click="addFavor">
+                    添加至收藏夹
+            <el-icon>
+                <CirclePlus />
+            </el-icon>
+        </el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 export default {
@@ -29,6 +36,15 @@ export default {
                 typeName:''
             },
         }
+    },
+    methods:{
+      addFavor(){
+            //TODO: 添加至收藏夹
+            ElMessage({
+                message:"添加成功",
+                type: 'success'
+            })
+        },
     },
     mounted(){
         const route = useRoute();

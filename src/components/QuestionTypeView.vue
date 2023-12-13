@@ -1,6 +1,6 @@
 <template>
     <div class="box" style="overflow: auto;">
-        <h2>选择题目类型：</h2>
+        <h2 style="color: #555;">选择题目类型：</h2>
         <el-button
             class="but" type="primary" plain
             v-for="questionType in questionTypeList" :key="questionType.id"
